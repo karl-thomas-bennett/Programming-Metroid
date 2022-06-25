@@ -40,6 +40,11 @@ public class Lexer
             {
                 number = input[i] + number;
             }
+            else if (input[i] == '-')
+            {
+                number = input[i] + number;
+                break;
+            }
             else
             {
                 break;
@@ -47,7 +52,7 @@ public class Lexer
         }
         for (int i = position + 1; i < input.Length; i++)
         {
-            if (char.IsDigit(input[i]) || input[i] == '.')
+            if (char.IsDigit(input[i]) || input[i] == '.' || input[i] == '-')
             {
                 number += input[i];
             }

@@ -38,5 +38,19 @@ namespace Tests
             float actual = Lexer.GetNumber("1.45+6.5", 5);
             Assert.AreEqual(expected, actual);
         }
+        [Test]
+        public void _005_NegativeBefore()
+        {
+            float expected = -1.45f;
+            float actual = Lexer.GetNumber("-1.45+6.5", 4);
+            Assert.AreEqual(expected, actual);
+        }
+        [Test]
+        public void _006_NegativeAfter()
+        {
+            float expected = -6.5f;
+            float actual = Lexer.GetNumber("1.45+-6.5", 5);
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
