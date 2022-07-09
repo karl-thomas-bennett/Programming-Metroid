@@ -4,28 +4,30 @@ using UnityEngine;
 
 public class Lexer
 {
-    string input;
-    Queue<string> tokens = new Queue<string>();
-    public Lexer(string input){
-        this.input = input;
-        List<string> additions = GetAdditions(input);
-        for(int i = 0; i < additions.Count; i++)
+    
+    public static Expression ParseExpression(string input){
+        Expression expression = null;
+        List<int> additionPositions = GetAdditionPositions(input);
+        for(int i = 0; i < additionPositions.Count; i++)
         {
-            for (int j = 0; j < additions[i].Length; j++)
+            if(i == 0)
             {
-                tokens.Enqueue(additions[i][j].ToString());
+                expression = new Expression(GetNumber(input, additionPositions[i] - 1), "+", GetNumber(input, additionPositions[i] + 1));
+                continue;
             }
+            expression = new Expression(expression, "+", GetNumber(input, additionPositions[i] + 1));
         }
+        return expression;
     }
 
-    public static List<string> GetAdditions(string input)
+    public static List<int> GetAdditionPositions(string input)
     {
-        List<string> output = new List<string>();
+        List<int> output = new List<int>();
         for(int i = 0; i < input.Length; i++)
         {
             if(input[i] == '+')
             {
-                output.Add("+(" + GetNumber(input, i - 1) + "," + GetNumber(input, i + 1) + ")");
+                output.Add(i);
             }
         }
         return output;
@@ -63,14 +65,5 @@ public class Lexer
         }
         return float.Parse(number);
     }
-
-    public bool HasNext()
-    {
-        return tokens.Count > 0;
-    }
-
-    public string Next()
-    {
-        return tokens.Dequeue();
-    }
+    
 }
