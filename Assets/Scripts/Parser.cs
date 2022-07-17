@@ -3,12 +3,7 @@ using System.Collections.Generic;
 
 public class Parser
 {
-    public Parser()
-    {
-
-    }
-
-    public float Calculate(string expression)
+    public static float Calculate(string expression)
     {
         expression = RemoveSpaces(expression);
         if (float.TryParse(expression, out float output))
@@ -18,12 +13,12 @@ public class Parser
         return new Node(ParseMathsExpression(expression)).DepthFirstEvaluation();
     }
 
-    public string RemoveSpaces(string code)
+    public static string RemoveSpaces(string code)
     {
         return string.Concat(code.Split(' '));
     }
 
-    public Expression ParseMathsExpression(string code)
+    public static Expression ParseMathsExpression(string code)
     {
         return Lexer.ParseExpression(code);
     }

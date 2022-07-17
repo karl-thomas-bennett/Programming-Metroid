@@ -41,7 +41,7 @@ public class Node
             if (current.children.Count == 2)
             {
                 stack.Pop();
-                current.SetOutput(current.children[0].output + current.children[1].output);
+                current.SetOutput(Expression.Evaluate(current.children[0].output, current.expression.op, current.children[1].output));
                 continue;
             }
             if (current.expression.expression1 == null)
@@ -65,7 +65,7 @@ public class Node
         return output;
     }
 
-    public void SetOutput(float output)
+    private void SetOutput(float output)
     {
         this.output = output;
         outputIsComputed = true;

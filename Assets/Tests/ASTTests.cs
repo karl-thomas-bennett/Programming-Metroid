@@ -9,88 +9,106 @@ public class ASTTests
     [Test]
     public void _001_NumberPlusNumber()
     {
-        Expression expression = new Expression(5, "+", 6);
-        Node node = new Node(expression);
+        TestExpression expression = new TestExpression(5, "+", 6);
+        TestNode node = new TestNode(expression);
         Assert.AreEqual(11, node.DepthFirstEvaluation());
     }
 
     [Test]
-    public void _002_NumberPlusExpression()
+    public void _002_NumberPlusTestExpression()
     {
-        Expression expression = new Expression(5, "+", 6);
-        Expression expression2 = new Expression(9, "+", expression);
-        Node node = new Node(expression2);
+        TestExpression expression = new TestExpression(5, "+", 6);
+        TestExpression expression2 = new TestExpression(9, "+", expression);
+        TestNode node = new TestNode(expression2);
         Assert.AreEqual(20, node.DepthFirstEvaluation());
     }
 
     [Test]
-    public void _003_ExpressionPlusNumber()
+    public void _003_TestExpressionPlusNumber()
     {
-        Expression expression = new Expression(5, "+", 6);
-        Expression expression2 = new Expression(expression, "+", 7);
-        Node node = new Node(expression2);
+        TestExpression expression = new TestExpression(5, "+", 6);
+        TestExpression expression2 = new TestExpression(expression, "+", 7);
+        TestNode node = new TestNode(expression2);
         Assert.AreEqual(18, node.DepthFirstEvaluation());
     }
 
     [Test]
-    public void _004_ExpressionPlusExpression()
+    public void _004_TestExpressionPlusTestExpression()
     {
-        Expression expression = new Expression(new Expression(1, "+", 2), "+", new Expression(3, "+", 4));
-        Node node = new Node(expression);
+        TestExpression expression = new TestExpression(new TestExpression(1, "+", 2), "+", new TestExpression(3, "+", 4));
+        TestNode node = new TestNode(expression);
         Assert.AreEqual(10, node.DepthFirstEvaluation());
     }
 
     [Test]
-    public void _005_BigExpression()
+    public void _005_BigTestExpression()
     {
-        Expression e = new Expression(0, "+", 0);
+        TestExpression e = new TestExpression(0, "+", 0);
         int expected = 100000;
         for(int i = 0; i < expected; i++)
         {
-            e = new Expression(e, "+", 1);
+            e = new TestExpression(e, "+", 1);
         }
-        Node node = new Node(e);
+        TestNode node = new TestNode(e);
         Assert.AreEqual(expected, node.DepthFirstEvaluation());
     }
 
     [Test]
-    public void _006_BigExpression()
+    public void _006_BigTestExpression()
     {
-        Expression e = new Expression(0, "+", 0);
+        TestExpression e = new TestExpression(0, "+", 0);
         int expected = 100000;
         for (int i = 0; i < expected; i++)
         {
-            e = new Expression(1, "+", e);
+            e = new TestExpression(1, "+", e);
         }
-        Node node = new Node(e);
+        TestNode node = new TestNode(e);
         Assert.AreEqual(expected, node.DepthFirstEvaluation());
     }
 
     [Test]
-    public void _007_BranchingExpression()
+    public void _007_BranchingTestExpression()
     {
-        Expression e = new Expression(1, "+", 0);
+        TestExpression e = new TestExpression(1, "+", 0);
         int expected = 10;
         for (int i = 0; i < expected; i++)
         {
-            e = new Expression(e, "+", new Expression(e));
+            e = new TestExpression(e, "+", new TestExpression(e));
         }
-        Node node = new Node(e);
+        TestNode node = new TestNode(e);
         Assert.AreEqual(Mathf.Pow(2, expected), node.DepthFirstEvaluation());
     }
 
+    [Test]
+    public void _009_TwoTestExpressionsInTestExpressionTest()
+    {
+        TestExpression e = new TestExpression(1, "+", 2);
+        TestNode node = new TestNode(new TestExpression(e, "+", e));
+
+        Assert.AreEqual(6, node.DepthFirstEvaluation());
+    }
 
     [Test]
-    public void _010_SimpleExpressionIsSimple()
+    public void _010_RecursiveTestExpressionsTest()
     {
-        Expression expression = new Expression(5, "+", 6);
+        TestExpression e = new TestExpression(1, "+", 2);
+        e = new TestExpression(e, "+", e);
+        TestNode node = new TestNode(new TestExpression(e, "+", e));
+
+        Assert.AreEqual(12, node.DepthFirstEvaluation());
+    }
+
+    [Test]
+    public void _011_SimpleTestExpressionIsSimple()
+    {
+        TestExpression expression = new TestExpression(5, "+", 6);
         Assert.IsTrue(expression.IsSimple());
     }
 
     [Test]
-    public void _011_ComplexExpressionIsNotSimple()
+    public void _012_ComplexTestExpressionIsNotSimple()
     {
-        Expression expression = new Expression(5, "+", new Expression(5, "+", 6));
+        TestExpression expression = new TestExpression(5, "+", new TestExpression(5, "+", 6));
         Assert.IsFalse(expression.IsSimple());
     }
 

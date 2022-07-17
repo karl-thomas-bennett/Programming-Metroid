@@ -9,29 +9,34 @@ public class Expression
     public Expression expression2 = null;
     public float value1 = 0;
     public float value2 = 0;
+    public string op = "";
 
     public Expression(float value1, string op, float value2)
     {
         this.value1 = value1;
         this.value2 = value2;
+        this.op = op;
     }
 
     public Expression(float value1, string op, Expression expression2)
     {
         this.value1 = value1;
         this.expression2 = expression2;
+        this.op = op;
     }
 
     public Expression(Expression expression1, string op, float value2)
     {
         this.expression1 = expression1;
         this.value2 = value2;
+        this.op = op;
     }
 
     public Expression(Expression expression1, string op, Expression expression2)
     {
         this.expression1 = expression1;
         this.expression2 = expression2;
+        this.op = op;
     }
 
     public Expression(Expression expression)
@@ -46,6 +51,7 @@ public class Expression
         {
             expression2 = expression.expression2;
         }
+        op = expression.op;
     }
 
     public bool IsSimple()
@@ -59,7 +65,26 @@ public class Expression
         {
             throw new System.Exception("Expression must be simple to use SimpleEvaluate: " + this);
         }
-        return value1 + value2;
+        switch (op)
+        {
+            case "+":
+                return value1 + value2;
+            case "-":
+                return value1 - value2;
+        }
+        throw new System.Exception("Invalid operator: " + op);
+    }
+
+    public static float Evaluate(float a, string op, float b)
+    {
+        switch (op)
+        {
+            case "+":
+                return a + b;
+            case "-":
+                return a - b;
+        }
+        throw new System.Exception("Invalid operator: " + op);
     }
 
     public override string ToString()

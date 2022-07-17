@@ -7,63 +7,26 @@ public class Lexer
     
     public static Expression ParseExpression(string input){
         Expression expression = null;
-        List<int> additionPositions = GetAdditionPositions(input);
-        for(int i = 0; i < additionPositions.Count; i++)
+        List<int> operatorPositions = StringHelpers.GetOperatorPositions(input);
+        bool isFirstOperation = true;
+        for(int i = 0; i < operatorPositions.Count; i++)
         {
-            if(i == 0)
+            if(operatorPositions[i] == 0 || StringHelpers.IsOperator(input[operatorPositions[i]-1]))
             {
-                expression = new Expression(GetNumber(input, additionPositions[i] - 1), "+", GetNumber(input, additionPositions[i] + 1));
+                //Operator symbol is part of number, eg "-5", or "5 + -3"
                 continue;
             }
-            expression = new Expression(expression, "+", GetNumber(input, additionPositions[i] + 1));
+            if(isFirstOperation)
+            {
+                expression = new Expression(StringHelpers.GetNumber(input, operatorPositions[i] - 1), input[operatorPositions[i]].ToString(), StringHelpers.GetNumber(input, operatorPositions[i] + 1));
+                isFirstOperation = false;
+                continue;
+            }
+            expression = new Expression(expression, input[operatorPositions[i]].ToString(), StringHelpers.GetNumber(input, operatorPositions[i] + 1));
         }
         return expression;
     }
-
-    public static List<int> GetAdditionPositions(string input)
-    {
-        List<int> output = new List<int>();
-        for(int i = 0; i < input.Length; i++)
-        {
-            if(input[i] == '+')
-            {
-                output.Add(i);
-            }
-        }
-        return output;
-    }
-
-    public static float GetNumber(string input, int position)
-    {
-        string number = "";
-        for(int i = position; i >= 0; i--)
-        {
-            if (char.IsDigit(input[i]) || input[i] == '.')
-            {
-                number = input[i] + number;
-            }
-            else if (input[i] == '-')
-            {
-                number = input[i] + number;
-                break;
-            }
-            else
-            {
-                break;
-            }
-        }
-        for (int i = position + 1; i < input.Length; i++)
-        {
-            if (char.IsDigit(input[i]) || input[i] == '.' || input[i] == '-')
-            {
-                number += input[i];
-            }
-            else
-            {
-                break;
-            }
-        }
-        return float.Parse(number);
-    }
+    
+    
     
 }
