@@ -16,13 +16,18 @@ public class Lexer
                 //Operator symbol is part of number, eg "-5", or "5 + -3"
                 continue;
             }
-            if(isFirstOperation)
+            string op = input[operatorPositions[i]].ToString();
+            if (isFirstOperation)
             {
-                expression = new Expression(StringHelpers.GetNumber(input, operatorPositions[i] - 1), input[operatorPositions[i]].ToString(), StringHelpers.GetNumber(input, operatorPositions[i] + 1));
+                float leftNumber = StringHelpers.GetNumber(input, operatorPositions[i] - 1);
+                float rightNumber = StringHelpers.GetNumber(input, operatorPositions[i] + 1);
+
+                expression = new Expression(leftNumber, op, rightNumber);
                 isFirstOperation = false;
                 continue;
             }
-            expression = new Expression(expression, input[operatorPositions[i]].ToString(), StringHelpers.GetNumber(input, operatorPositions[i] + 1));
+            float number = StringHelpers.GetNumber(input, operatorPositions[i] + 1);
+            expression = new Expression(expression, op, number);
         }
         return expression;
     }
